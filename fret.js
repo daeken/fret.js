@@ -1,5 +1,38 @@
 $(document).ready(function() {
+	var serialize = function(obj) {
+		var str = [];
+		for(var p in obj)
+			if (obj.hasOwnProperty(p)) {
+				str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+			}
+		return str.join("&");
+	};
+	var deserialize = function(pairs) {
+		var obj = {};
+		pairs = pairs.split('&');
+		for(var i in pairs) {
+			var pair = pairs[i].split('=', 2);
+			obj[pair[0]] = pair[1];
+		}
+		return obj;
+	};
+	var pmap = {
+		frets: '#frets', 
+		scale_length: '#scale-length', 
+		thickness: '#thickness', 
+		nut_width: '#nut-width', 
+		last_width: '#last-width', 
+		nut_radius: '#nut-radius', 
+		last_radius: '#last-radius', 
+		fret_thickness: '#fret-thickness', 
+		fret_depth: '#fret-depth', 
+		overhang: '#overhang', 
+		inlays: '#inlays'
+	};
+
+	var outstanding = 0;
 	function refresh() {
+		outstanding++;
 		var worker = new Worker('fretworker.js');
 		worker.onmessage = function(ret) {
 			var data = ret.data;
@@ -8,22 +41,27 @@ $(document).ready(function() {
 			csgo.polygons = data[1].polygons;
 			viewer.mesh = csgo.toMesh();
 			viewer.gl.ondraw();
-			$('#recalc').hide();
+			if(--outstanding == 0)
+				$('#recalc').hide();
 		};
 		$('#recalc').show();
-		worker.postMessage({
+		var data = {
 			frets: parseInt($('#frets').val()) || 22, 
 			scale_length: parseFloat($('#scale-length').val()) || 624, 
 			thickness: parseFloat($('#thickness').val()) || 5, 
 			nut_width: parseFloat($('#nut-width').val()) || 43, 
 			last_width: parseFloat($('#last-width').val()) || 57, 
-			nut_radius: (parseFloat($('#nut-radius').val()) || 12) * 25.4, 
-			last_radius: (parseFloat($('#last-radius').val()) || 12) * 25.4, 
+			nut_radius: parseFloat($('#nut-radius').val()) || 12, 
+			last_radius: parseFloat($('#last-radius').val()) || 12, 
 			fret_thickness: parseFloat($('#fret-thickness').val()) || 2, 
 			fret_depth: parseFloat($('#fret-depth').val()) || 2, 
 			overhang: parseFloat($('#overhang').val()) || 10, 
 			inlays: $('#inlays').val()
-		});
+		};
+		window.location.hash = '#' + serialize(data);
+		data.nut_radius *= 25.4;
+		data.last_radius *= 25.4;
+		worker.postMessage(data);
 	}
 
 	function zipstl(data) {
@@ -68,7 +106,26 @@ $(document).ready(function() {
 		event.preventDefault();
 	})
 
-	$('input').change(refresh);
+	$('input[type=text]').change(refresh);
 	$('select').change(refresh);
-	refresh();
+	$('#wireframe').change(function() {
+		viewer.wireframe = $('#wireframe').is(':checked');
+		viewer.gl.ondraw();
+	});
+	var first = true;
+	window.onhashchange = function() {
+		var changed = false || (first === true);
+		first = false;
+		var hash = deserialize(window.location.hash.substring(1, window.location.hash.length));
+		for(var k in pmap)
+			if(hash[k] !== undefined) {
+				if($(pmap[k]).val() != hash[k]) {
+					$(pmap[k]).val(hash[k]);
+					changed = true;
+				}
+			}
+		if(changed)
+			refresh();
+	};
+	window.onhashchange();
 })

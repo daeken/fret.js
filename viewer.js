@@ -34,6 +34,7 @@ function Viewer(csg, width, height, depth) {
   var gl = GL.create();
   this.gl = gl;
   this.mesh = csg.toMesh();
+  this.wireframe = false;
 
   // Set up the viewport
   gl.canvas.width = width;
@@ -114,7 +115,8 @@ function Viewer(csg, width, height, depth) {
 
     if (Viewer.lineOverlay) gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
-    that.blackShader.draw(that.mesh, gl.LINES);
+    if(that.wireframe)
+      that.blackShader.draw(that.mesh, gl.LINES);
     gl.disable(gl.BLEND);
     if (Viewer.lineOverlay) gl.enable(gl.DEPTH_TEST);
   };
