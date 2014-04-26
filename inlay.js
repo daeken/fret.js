@@ -18,7 +18,7 @@ inlayMap.centerDot = function(fret, cy, width, space, thickness) {
 	}
 };
 inlayMap.waveDot = function(fret, cy, width, space, thickness) {
-	if(((fret % 12) % 2 == 1 || ((fret % 12 == 0) && fret > 1)) && (fret % 12) != 1 && (fret % 12) != 11) {
+	if(((fret % 2) == 1 || (fret % 12) == 0) && ((fret % 12) != 1 || fret == 1) && (fret % 12) != 11) {
 		return new CSG.sphere({
 			center: [width * 0.3 * Math.cos((fret / 24) * Math.PI * 2 - Math.PI), cy, thickness + 1.5], 
 			radius: 3.0 + (Math.cos((fret / 24) * Math.PI * 2 - Math.PI) + 1.0)

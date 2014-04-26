@@ -127,7 +127,7 @@ function cut_frets(fretboard) {
 		var pos = fret_position(i);
 		var slot = new CSG.cube({
 			center: [0, pos - length / 2, thickness], 
-			radius: [last_width / 2, fret_thickness / 2, fret_depth]
+			radius: [last_width / 2, fret_thickness / 2, fret_depth - height_at(0, pos / length) / 2.0]
 		});
 		slot.setColor(0, 0, 1);
 		fretboard = fretboard.subtract(slot);
@@ -174,7 +174,8 @@ onmessage = function(event) {
 	var fretboard = fingerboard();
 	fretboard.setColor(1, 1, 0);
 
-	fretboard = cut_frets(fretboard);
+	if(fret_thickness > 0 && fret_depth > 0)
+		fretboard = cut_frets(fretboard);
 	fretboard = cut_inlays(fretboard);
 	postMessage([total_length(), fretboard]);
 };

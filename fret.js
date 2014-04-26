@@ -53,8 +53,8 @@ $(document).ready(function() {
 			last_width: parseFloat($('#last-width').val()) || 57, 
 			nut_radius: parseFloat($('#nut-radius').val()) || 12, 
 			last_radius: parseFloat($('#last-radius').val()) || 12, 
-			fret_thickness: parseFloat($('#fret-thickness').val()) || 2, 
-			fret_depth: parseFloat($('#fret-depth').val()) || 2, 
+			fret_thickness: parseFloat($('#fret-thickness').val()), 
+			fret_depth: parseFloat($('#fret-depth').val()), 
 			overhang: parseFloat($('#overhang').val()) || 10, 
 			inlays: $('#inlays').val()
 		};
