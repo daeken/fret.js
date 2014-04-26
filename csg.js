@@ -593,3 +593,10 @@ CSG.Node.prototype = {
     }
   }
 };
+
+// Set the color of all polygons in this solid
+CSG.prototype.setColor = function(r, g, b) {
+  this.toPolygons().map(function(polygon) {
+    polygon.shared = [r, g, b];
+  });
+};

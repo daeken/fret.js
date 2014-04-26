@@ -4,7 +4,6 @@
 	<script src="csg.js"></script>
 	<script src="viewer.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="inlay.js"></script>
 	<script src="fret.js"></script>
 	<script src="zip.js"></script>
 	<style>
@@ -33,7 +32,7 @@ canvas { cursor: move; }
 		</select></td></tr>
 	</table>
 	(All non-radius measurements in millimeters!)<br>
-	<a href="#" id="stl-download">Download STL</a><br>
+	<a href="#" id="stl-download">Download STL</a> <span id="recalc" style="color: red; font-weight: bold">Recalculating mesh</span><br>
 	<br>
 	<div id="view" class="viewer" style="background-position:-1px -1px;"></div>
 </body></html>
