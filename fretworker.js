@@ -58,7 +58,7 @@ function height_at(x, y) {
 }
 
 function fingerboard() {
-	var xres = 0.25, yres=0.01; // Slices per mm
+	var xres = 0.05, yres=0.01; // Slices per mm
 	var xsteps = Math.ceil(last_width * xres), ysteps = Math.ceil(total_length() * yres);
 	var xiter = 1.0 / xsteps, yiter = 1.0 / ysteps;
 	var indices = [], vertices = [];
